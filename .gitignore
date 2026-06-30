@@ -9,3 +9,31 @@ coverage
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+# dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# environment variables
+.env
+.env.local
+.env.development
+.env.production
+
+# build outputs
+dist/
+build/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Prisma
+server/prisma/dev.db
