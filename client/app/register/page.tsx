@@ -34,7 +34,7 @@ export default function RegisterPage() {
 
       await API.post("/auth/register", form);
 
-      alert("Account created successfully 🎉");
+      alert("Account created successfully ");
 
       router.push("/login");
     } catch (err: any) {

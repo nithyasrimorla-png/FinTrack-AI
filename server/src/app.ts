@@ -2,13 +2,44 @@ import express from "express";
 import cors from "cors";
 import authRoutes from "./routes/auth.routes";
 import transactionRoutes from "./routes/transaction.routes";
+
 const app = express();
 
-app.use(cors());
-app.use(express.json());
+// =============================
+// Middlewares
+// =============================
+app.use(cors({
+  origin: "http://localhost:3000", // change in production
+  credentials: true,
+}));
 
-// IMPORTANT: API PREFIX
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// =============================
+// Health Check Route
+// =============================
+app.get("/", (req, res) => {
+  res.json({
+    success: true,
+    message: "API is running !",
+  });
+});
+
+// =============================
+// Routes
+// =============================
 app.use("/api/auth", authRoutes);
 app.use("/api/transactions", transactionRoutes);
+
+// =============================
+// 404 Handler (IMPORTANT)
+// =============================
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: "Route not found",
+  });
+});
 
 export default app;

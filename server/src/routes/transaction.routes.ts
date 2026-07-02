@@ -1,117 +1,159 @@
 import express from "express";
+import prisma from "../config/prisma";
 import multer from "multer";
 import csv from "csv-parser";
 import fs from "fs";
 
 const router = express.Router();
 
-// Multer configuration
 const upload = multer({
   dest: "uploads/",
 });
 
-// Dummy in-memory storage
-let transactions: any[] = [];
+/* =============================
+   ADD TRANSACTION
+============================= */
+router.post("/", async (req, res) => {
+  try {
+    const { title, amount, type, category } = req.body;
 
-// =============================
-// Add Transaction
-// =============================
-router.post("/", (req, res) => {
-  const { title, amount, type, category } = req.body;
-
-  const newTx = {
-    id: Date.now(),
-    title,
-    amount,
-    type,
-    category,
-  };
-
-  transactions.push(newTx);
-
-  res.json({
-    success: true,
-    data: newTx,
-  });
-});
-
-// =============================
-// Get All Transactions
-// =============================
-router.get("/", (req, res) => {
-  res.json({
-    success: true,
-    data: transactions,
-  });
-});
-
-// =============================
-// Delete Transaction
-// =============================
-router.delete("/:id", (req, res) => {
-  transactions = transactions.filter(
-    (t) => t.id !== Number(req.params.id)
-  );
-
-  res.json({
-    success: true,
-    message: "Deleted successfully",
-  });
-});
-
-// =============================
-// Upload CSV
-// =============================
-router.post(
-  "/upload",
-  upload.single("file"),
-  (req: any, res) => {
-    if (!req.file) {
-      return res.status(400).json({
-        success: false,
-        message: "No CSV file uploaded",
-      });
+    if (!title || !amount || !type || !category) {
+      return res.status(400).json({ message: "Missing fields" });
     }
 
-    const results: any[] = [];
+    // TEMP fallback safety
+    const cleanAmount = Number(amount);
+    if (isNaN(cleanAmount)) {
+      return res.status(400).json({ message: "Invalid amount" });
+    }
 
-    fs.createReadStream(req.file.path)
-      .pipe(csv())
-      .on("data", (row) => {
-        results.push({
-          id: Date.now() + Math.random(),
+    const newTx = await prisma.transaction.create({
+      data: {
+        title,
+        amount: cleanAmount,
+        type,
+        category,
+      },
+    });
 
-          title: row.title,
+    res.json({ success: true, data: newTx });
 
-          amount: Number(row.amount),
+  } catch (err: any) {
+    console.error("ERROR:", err);
+    res.status(500).json({ message: err.message });
+  }
+});
 
-          type: row.type.toLowerCase(),
+/* =============================
+   GET ALL
+============================= */
+router.get("/", async (req, res) => {
+  console.log("GET /api/transactions");
 
-          category: row.category,
+  try {
+    const data = await prisma.transaction.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    res.json({
+      success: true,
+      data,
+    });
+  } catch (err: any) {
+    console.error("GET ERROR:", err);
+
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
+
+/* =============================
+   DELETE
+============================= */
+router.delete("/:id", async (req, res) => {
+  console.log("DELETE Transaction:", req.params.id);
+
+  try {
+    await prisma.transaction.delete({
+      where: {
+        id: req.params.id, // 🔥 CHANGE THIS if your id is INT (see note below)
+      },
+    });
+
+    res.json({
+      success: true,
+      message: "Deleted successfully",
+    });
+  } catch (err: any) {
+    console.error("DELETE ERROR:", err);
+
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+});
+
+/* =============================
+   CSV UPLOAD
+============================= */
+router.post("/upload", upload.single("file"), (req: any, res) => {
+  console.log("CSV Upload Route Reached");
+
+  if (!req.file) {
+    return res.status(400).json({
+      success: false,
+      message: "No CSV file uploaded",
+    });
+  }
+
+  const results: any[] = [];
+
+  fs.createReadStream(req.file.path)
+    .pipe(csv())
+    .on("data", (row) => {
+      results.push({
+        title: row.title || row.Title,
+        amount: Number(row.amount || row.Amount),
+        type: (row.type || row.Type || "").toLowerCase(),
+        category: row.category || row.Category,
+      });
+    })
+    .on("end", async () => {
+      try {
+        const inserted = await prisma.transaction.createMany({
+          data: results,
         });
-      })
-      .on("end", () => {
-        transactions.push(...results);
 
-        // Delete uploaded temp file
-        fs.unlinkSync(req.file.path);
+        // safer delete (prevents crash)
+        fs.unlink(req.file.path, () => {});
 
         res.json({
           success: true,
-          message: "CSV Uploaded Successfully 🚀",
-          count: results.length,
-          data: results,
+          message: "CSV Uploaded Successfully!",
+          count: inserted.count,
         });
-      })
-      .on("error", (err) => {
-        console.error(err);
+      } catch (err: any) {
+        console.error("DB INSERT ERROR:", err);
 
         res.status(500).json({
           success: false,
-          message: "Failed to process CSV",
+          message: err.message,
         });
+      }
+    })
+    .on("error", (err) => {
+      console.error("CSV ERROR:", err);
+
+      res.status(500).json({
+        success: false,
+        message: "CSV processing failed",
       });
-  }
-);
+    });
+});
 
 export default router;

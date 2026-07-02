@@ -18,19 +18,19 @@ export function generateInsights(transactions: any[]) {
   const insights = [];
 
   if (expense > income) {
-    insights.push("⚠️ You are spending more than you earn!");
+    insights.push(" You are spending more than you earn!");
   }
 
   if (foodSpend > income * 0.3) {
-    insights.push("🍔 High spending on Food detected");
+    insights.push(" High spending on Food detected");
   }
 
   if (travelSpend > income * 0.2) {
-    insights.push("✈️ Travel expenses are quite high");
+    insights.push(" Travel expenses are quite high");
   }
 
   if (expense < income) {
-    insights.push("✅ Good job! You are saving money this month");
+    insights.push(" Good job! You are saving money this month");
   }
 
   return insights;

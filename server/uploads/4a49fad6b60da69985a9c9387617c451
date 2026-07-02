@@ -1,0 +1,16 @@
+title,amount,type,category
+Salary,50000,income,Salary
+Freelance Project,12000,income,Freelance
+Bonus,5000,income,Bonus
+Netflix,499,expense,Entertainment
+Spotify,119,expense,Entertainment
+Groceries,1850,expense,Food
+Coffee,220,expense,Food
+Petrol,1800,expense,Travel
+Electricity Bill,2450,expense,Bills
+Internet Bill,999,expense,Bills
+Shopping,3500,expense,Shopping
+Movie Tickets,700,expense,Entertainment
+Dining Out,1450,expense,Food
+Medicine,900,expense,Healthcare
+Gym Membership,1200,expense,Fitness
