@@ -1,7 +1,7 @@
 import express from "express";
 import prisma from "../config/prisma";
 import bcrypt from "bcryptjs";
-
+import jwt from "jsonwebtoken";
 const router = express.Router();
 
 /* =====================
@@ -45,6 +45,9 @@ router.post("/register", async (req, res) => {
 /* =====================
    LOGIN
 ===================== */
+/* =====================
+   LOGIN
+===================== */
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -70,10 +73,25 @@ router.post("/login", async (req, res) => {
       },
     });
 
+    const token = jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+      },
+      process.env.JWT_SECRET as string,
+      {
+        expiresIn: "7d",
+      }
+    );
+
     res.json({
       success: true,
-      message: "Login successful",
-      user: { id: user.id, email: user.email },
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      },
     });
   } catch (err: any) {
     res.status(500).json({ message: err.message });

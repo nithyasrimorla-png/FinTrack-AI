@@ -191,7 +191,7 @@ const handleSubmit = async (e: any) => {
 
           <p className="text-slate-400 mt-2 mb-8">
 
-            Welcome back to FinPilot AI
+            Welcome back to FinTrack AI
 
           </p>
 

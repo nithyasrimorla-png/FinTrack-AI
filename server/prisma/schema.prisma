@@ -14,14 +14,22 @@ model Transaction {
   category  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
 }
+
 model UploadHistory {
   id         String   @id @default(uuid())
   fileName   String
   rowCount   Int      @default(0)
   status     String
   uploadedAt DateTime @default(now())
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
 }
+
 model User {
   id        String   @id @default(uuid())
   name      String?
@@ -31,5 +39,8 @@ model User {
   updatedAt DateTime @updatedAt
 
   lastLogin DateTime?
-  streak    Int      @default(0)
+  streak    Int       @default(0)
+
+  transactions Transaction[]
+  uploads      UploadHistory[]
 }
