@@ -40,9 +40,9 @@ export const getTransactions = async (req: Request, res: Response) => {
 export const deleteTransaction = async (req: Request, res: Response) => {
   try {
     await prisma.transaction.delete({
-      where: {
-        id: req.params.id,
-      },
+     where: {
+  id: req.params.id as string,
+}
     });
 
     res.json({ success: true });

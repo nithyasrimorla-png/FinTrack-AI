@@ -83,11 +83,11 @@ router.get("/", auth, async (req: AuthRequest, res) => {
 ============================= */
 router.delete("/:id", auth, async (req: AuthRequest, res) => {
   try {
-    await prisma.transaction.delete({
-      where: {
-        id: req.params.id,
-      },
-    });
+  await prisma.transaction.delete({
+  where: {
+    id: req.params.id as string,
+  },
+});
 
     res.json({
       success: true,
