@@ -39,3 +39,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+# uploads (NEVER push files)
+uploads/
+
+# prisma local DB artifacts (optional but recommended)
+prisma/dev.db
+
+# env
+.env
+.env.local
+
+# node modules
+node_modules

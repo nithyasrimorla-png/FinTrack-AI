@@ -43,7 +43,7 @@ const handleSubmit = async (e: any) => {
     localStorage.setItem("token", res.data.token);
 
     
-    setSuccessMessage("Login successful 🚀");
+    setSuccessMessage("Login successful ");
 
     
     setTimeout(() => {

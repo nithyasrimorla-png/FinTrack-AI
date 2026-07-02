@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import authRoutes from "./routes/auth.routes";
 import transactionRoutes from "./routes/transaction.routes";
-
+import uploadsRouter from "./routes/uploads";
 const app = express();
 
 // =============================
@@ -15,7 +15,7 @@ app.use(cors({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use("/api/uploads", uploadsRouter);
 // =============================
 // Health Check Route
 // =============================

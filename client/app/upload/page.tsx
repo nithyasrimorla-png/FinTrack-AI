@@ -1,10 +1,18 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import API from "@/src/lib/axios";
 import AppNavbar from "@/src/components/layout/AppNavbar";
 
 type UploadStatus = "idle" | "uploading" | "success" | "error";
+
+type UploadHistoryItem = {
+  id: string;
+  fileName: string;
+  rowCount: number;
+  status: "SUCCESS" | "FAILED";
+  uploadedAt: string;
+};
 
 const SAMPLE_ROWS = [
   { title: "Netflix", amount: "499", type: "Expense", category: "Entertainment" },
@@ -28,6 +36,15 @@ function formatBytes(bytes: number) {
   return `${(bytes / Math.pow(1024, i)).toFixed(i === 0 ? 0 : 1)} ${units[i]}`;
 }
 
+function formatDate(iso: string) {
+  const d = new Date(iso);
+  return d.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  }) + " · " + d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
+}
+
 export default function UploadPage() {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
@@ -36,6 +53,26 @@ export default function UploadPage() {
   const [status, setStatus] = useState<UploadStatus>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const [uploadHistory, setUploadHistory] = useState<UploadHistoryItem[]>([]);
+  const [historyLoading, setHistoryLoading] = useState(true);
+
+  const fetchUploadHistory = useCallback(async () => {
+    try {
+      setHistoryLoading(true);
+      const res = await API.get("/uploads");
+      setUploadHistory(res.data || []);
+    } catch (err) {
+      // Fail silently for history — upload flow itself is unaffected
+      setUploadHistory([]);
+    } finally {
+      setHistoryLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchUploadHistory();
+  }, [fetchUploadHistory]);
 
   const resetMessages = () => {
     setStatus("idle");
@@ -108,9 +145,11 @@ export default function UploadPage() {
 
       setProgress(100);
       setStatus("success");
+      fetchUploadHistory();
     } catch (err: any) {
       setStatus("error");
       setErrorMessage(err.response?.data?.message || "Upload failed. Please try again.");
+      fetchUploadHistory();
     } finally {
       setLoading(false);
     }
@@ -188,7 +227,6 @@ export default function UploadPage() {
                 : "border-[#1F2937] bg-[#0B1120]/40 hover:border-[#14B8A6]/60 hover:bg-[#14B8A6]/[0.03]",
             ].join(" ")}
           >
-            {/* animated glow ring */}
             <span
               className={[
                 "pointer-events-none absolute inset-0 rounded-xl transition-opacity duration-500",
@@ -246,7 +284,6 @@ export default function UploadPage() {
             </p>
           </label>
 
-          {/* Selected file row */}
           {file && (
             <div className="mt-5 flex items-center justify-between gap-4 rounded-xl border border-[#1F2937] bg-[#1E293B]/60 px-4 py-3 animate-[scaleIn_0.25s_ease]">
               <div className="flex items-center gap-3 min-w-0">
@@ -274,7 +311,6 @@ export default function UploadPage() {
             </div>
           )}
 
-          {/* Progress bar */}
           {status === "uploading" && (
             <div className="mt-5 space-y-2 animate-[fadeIn_0.3s_ease]">
               <div className="flex items-center justify-between text-xs text-slate-400">
@@ -290,7 +326,6 @@ export default function UploadPage() {
             </div>
           )}
 
-          {/* Status messages */}
           {status === "success" && (
             <div className="mt-5 flex items-center gap-2 rounded-lg border border-[#22C55E]/30 bg-[#22C55E]/10 px-4 py-3 text-sm text-[#22C55E] animate-[fadeIn_0.3s_ease]">
               <svg className="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none">
@@ -451,25 +486,103 @@ export default function UploadPage() {
           <h2 className="text-lg font-semibold text-white mb-1">Recent uploads</h2>
           <p className="text-sm text-slate-400 mb-6">Your last few imports will appear here.</p>
 
-          <div className="flex flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-[#1F2937] bg-[#0B1120]/30 px-6 py-12 text-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#1E293B] border border-[#1F2937] text-slate-500">
-              <svg className="h-8 w-8" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M9 13h6m-6 4h6M7 3h7l5 5v13a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1z"
+          {historyLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <svg className="h-5 w-5 animate-spin text-slate-500" viewBox="0 0 24 24" fill="none">
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
                   stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
                 />
               </svg>
             </div>
-            <div>
-              <p className="text-sm font-medium text-white">No uploads yet</p>
-              <p className="mt-1 text-xs text-slate-500">
-                Files you upload will show up here with their status and date.
-              </p>
+          ) : uploadHistory.length === 0 ? (
+            <div className="flex flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-[#1F2937] bg-[#0B1120]/30 px-6 py-12 text-center">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#1E293B] border border-[#1F2937] text-slate-500">
+                <svg className="h-8 w-8" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M9 13h6m-6 4h6M7 3h7l5 5v13a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1z"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-white">No uploads yet</p>
+                <p className="mt-1 text-xs text-slate-500">
+                  Files you upload will show up here with their status and date.
+                </p>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="overflow-x-auto rounded-xl border border-[#1F2937]">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="bg-[#1E293B] text-left text-xs uppercase tracking-wide text-slate-400">
+                    <th className="px-4 py-3 font-medium">File</th>
+                    <th className="px-4 py-3 font-medium">Uploaded</th>
+                    <th className="px-4 py-3 font-medium">Rows</th>
+                    <th className="px-4 py-3 font-medium">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {uploadHistory.map((item, idx) => (
+                    <tr
+                      key={item.id}
+                      className={[
+                        "border-t border-[#1F2937] transition-colors hover:bg-[#1E293B]/50",
+                        idx % 2 === 0 ? "bg-transparent" : "bg-[#0B1120]/30",
+                      ].join(" ")}
+                    >
+                      <td className="px-4 py-2.5 text-white">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <svg
+                            className="h-4 w-4 shrink-0 text-slate-500"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                          >
+                            <path
+                              d="M7 3h7l5 5v13a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1z"
+                              stroke="currentColor"
+                              strokeWidth="1.5"
+                            />
+                            <path d="M14 3v5h5" stroke="currentColor" strokeWidth="1.5" />
+                          </svg>
+                          <span className="truncate">{item.fileName}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-2.5 text-slate-300">
+                        {formatDate(item.uploadedAt)}
+                      </td>
+                      <td className="px-4 py-2.5 text-slate-300">{item.rowCount}</td>
+                      <td className="px-4 py-2.5">
+                        <span
+                          className={[
+                            "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+                            item.status === "SUCCESS"
+                              ? "bg-[#22C55E]/10 text-[#22C55E]"
+                              : "bg-[#FB7185]/10 text-[#FB7185]",
+                          ].join(" ")}
+                        >
+                          {item.status === "SUCCESS" ? "Success" : "Failed"}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </section>
       </main>
 

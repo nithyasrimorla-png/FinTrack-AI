@@ -80,7 +80,7 @@ router.delete("/:id", async (req, res) => {
   try {
     await prisma.transaction.delete({
       where: {
-        id: req.params.id, // 🔥 CHANGE THIS if your id is INT (see note below)
+        id: req.params.id,
       },
     });
 
@@ -129,6 +129,14 @@ router.post("/upload", upload.single("file"), (req: any, res) => {
           data: results,
         });
 
+        await prisma.uploadHistory.create({
+          data: {
+            fileName: req.file.originalname,
+            rowCount: inserted.count,
+            status: "SUCCESS",
+          },
+        });
+
         // safer delete (prevents crash)
         fs.unlink(req.file.path, () => {});
 
@@ -138,13 +146,21 @@ router.post("/upload", upload.single("file"), (req: any, res) => {
           count: inserted.count,
         });
       } catch (err: any) {
-        console.error("DB INSERT ERROR:", err);
+  console.error("DB INSERT ERROR:", err);
 
-        res.status(500).json({
-          success: false,
-          message: err.message,
-        });
-      }
+  await prisma.uploadHistory.create({
+    data: {
+      fileName: req.file?.originalname || "Unknown",
+      rowCount: 0,
+      status: "FAILED",
+    },
+  });
+
+  res.status(500).json({
+    success: false,
+    message: err.message,
+  });
+}
     })
     .on("error", (err) => {
       console.error("CSV ERROR:", err);
@@ -155,5 +171,6 @@ router.post("/upload", upload.single("file"), (req: any, res) => {
       });
     });
 });
+
 
 export default router;
