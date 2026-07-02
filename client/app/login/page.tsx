@@ -267,12 +267,13 @@ const handleSubmit = async (e: any) => {
 
               </label>
 
-              <button
-                type="button"
-                className="text-cyan-400 hover:text-cyan-300 text-sm transition"
-              >
-                Forgot Password?
-              </button>
+            <button
+              type="button"
+              onClick={() => router.push("/forgot-password")}
+              className="text-cyan-400 hover:text-cyan-300 text-sm transition"
+            >
+              Forgot Password?
+            </button>
 
             </div>
 
