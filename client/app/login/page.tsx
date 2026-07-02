@@ -34,32 +34,27 @@ export default function LoginPage() {
 
 const handleSubmit = async (e: any) => {
   e.preventDefault();
+  setLoading(true);
 
   try {
-    setLoading(true);
-
     const res = await API.post("/auth/login", form);
 
     localStorage.setItem("token", res.data.token);
-
     setSuccessMessage("Login successful!");
 
     setTimeout(() => {
       router.push("/dashboard");
     }, 1500);
-
   } catch (err: any) {
-    setSuccessMessage(
-      err.response?.data?.message || "Login failed"
-    );
-
-    setTimeout(() => {
-      setSuccessMessage(null);
-    }, 2000);
-
+    console.log("LOGIN ERROR:", err.response?.data || err);
+    setSuccessMessage(err.response?.data?.message || "Login failed");
   } finally {
     setLoading(false);
   }
+
+  setTimeout(() => {
+    setSuccessMessage(null);
+  }, 2000);
 };
 
   return (
