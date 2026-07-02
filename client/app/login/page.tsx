@@ -42,17 +42,16 @@ const handleSubmit = async (e: any) => {
 
     localStorage.setItem("token", res.data.token);
 
-    
-    setSuccessMessage("Login successful ");
+    setSuccessMessage("Login successful!");
 
-    
     setTimeout(() => {
-      setSuccessMessage(null);
       router.push("/dashboard");
     }, 1500);
 
   } catch (err: any) {
-    setSuccessMessage(err.response?.data?.message || "Login Failed");
+    setSuccessMessage(
+      err.response?.data?.message || "Login failed"
+    );
 
     setTimeout(() => {
       setSuccessMessage(null);
@@ -194,6 +193,17 @@ const handleSubmit = async (e: any) => {
             Welcome back to FinTrack AI
 
           </p>
+          {successMessage && (
+          <div
+            className={`mb-6 rounded-lg px-4 py-3 text-sm text-center ${
+              successMessage.toLowerCase().includes("successful")
+                ? "bg-green-500/10 border border-green-500 text-green-400"
+                : "bg-red-500/10 border border-red-500 text-red-400"
+            }`}
+          >
+            {successMessage}
+          </div>
+        )}
 
           <form
             onSubmit={handleSubmit}

@@ -6,7 +6,7 @@ import API from "@/src/lib/axios";
 
 export default function RegisterPage() {
   const router = useRouter();
-
+ const [message, setMessage] = useState("");
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -14,7 +14,6 @@ export default function RegisterPage() {
   });
 
   const [loading, setLoading] = useState(false);
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -34,14 +33,18 @@ export default function RegisterPage() {
 
       await API.post("/auth/register", form);
 
-      alert("Account created successfully ");
+     setMessage("Account created successfully!");
+
+      setTimeout(() => {
+        router.push("/login");
+      }, 1500);
 
       router.push("/login");
     } catch (err: any) {
-      alert(
-        err.response?.data?.message ||
-          "Registration failed"
-      );
+     setMessage(
+      err.response?.data?.message ||
+      "Registration failed"
+    );
     } finally {
       setLoading(false);
     }
@@ -59,6 +62,17 @@ export default function RegisterPage() {
         <p className="text-slate-400 text-center mt-2 mb-8">
           Start managing your finances smarter.
         </p>
+        {message && (
+        <div
+          className={`mb-6 rounded-lg px-4 py-3 text-sm text-center ${
+            message.toLowerCase().includes("success")
+              ? "bg-green-500/10 border border-green-500 text-green-400"
+              : "bg-red-500/10 border border-red-500 text-red-400"
+          }`}
+        >
+          {message}
+        </div>
+      )}
 
         <form
           onSubmit={handleSubmit}
