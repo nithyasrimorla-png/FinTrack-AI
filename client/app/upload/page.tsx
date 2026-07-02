@@ -99,22 +99,22 @@ export default function UploadPage() {
     setFile(selected);
   };
 
-  const handleDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(false);
-    const dropped = e.dataTransfer.files?.[0];
-    validateAndSetFile(dropped);
-  }, []);
+const handleDrop = useCallback((e: React.DragEvent<HTMLLabelElement>) => {
+  e.preventDefault();
+  setIsDragging(false);
+  const dropped = e.dataTransfer.files?.[0];
+  validateAndSetFile(dropped);
+}, []);
 
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(true);
-  };
+const handleDragOver = (e: React.DragEvent<HTMLLabelElement>) => {
+  e.preventDefault();
+  setIsDragging(true);
+};
 
-  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(false);
-  };
+const handleDragLeave = (e: React.DragEvent<HTMLLabelElement>) => {
+  e.preventDefault();
+  setIsDragging(false);
+};
 
   const handleUpload = async () => {
     if (!file) {
