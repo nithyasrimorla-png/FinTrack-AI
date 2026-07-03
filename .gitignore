@@ -49,3 +49,5 @@ prisma/dev.db
 
 # node modules
 node_modules
+.vercel
+.env*

@@ -1,51 +1,79 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import API from "@/src/lib/axios";
 
 export default function ResetPassword() {
-  const [token, setToken] = useState("");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const token = searchParams.get("token");
+
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleReset = async () => {
+    if (!token) {
+      setMsg("Invalid or missing reset token.");
+      return;
+    }
+
+    setLoading(true);
+
     try {
       await API.post("/auth/reset-password", {
         token,
         newPassword: password,
       });
 
-      setMsg("Password reset successful!");
+      setMsg("Password reset successful! Redirecting to login...");
+
+      setTimeout(() => {
+        router.push("/login");
+      }, 2000);
+
     } catch (err: any) {
-      setMsg(err.response?.data?.message || "Error");
+      setMsg(err.response?.data?.message || "Error resetting password.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1>Reset Password</h1>
+    <div className="flex items-center justify-center min-h-screen bg-slate-900">
+      <div className="bg-slate-800 p-8 rounded-xl shadow-lg w-[400px] text-white">
+        <h1 className="text-3xl font-bold text-center">
+          Reset Password
+        </h1>
 
-      <input
-        className="border p-2 mt-4"
-        placeholder="Enter token"
-        onChange={(e) => setToken(e.target.value)}
-      />
+        <p className="text-gray-400 text-center mt-2">
+          Enter your new password.
+        </p>
 
-      <input
-        className="border p-2 mt-4"
-        type="password"
-        placeholder="New password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
+        <input
+          type="password"
+          placeholder="New Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full mt-6 p-3 rounded-lg bg-slate-700 border border-slate-600"
+        />
 
-      <button
-        className="bg-green-500 text-white px-4 py-2 mt-4"
-        onClick={handleReset}
-      >
-        Reset Password
-      </button>
+        <button
+          onClick={handleReset}
+          disabled={loading}
+          className="w-full mt-5 bg-cyan-500 hover:bg-cyan-600 p-3 rounded-lg font-semibold"
+        >
+          {loading ? "Resetting..." : "Reset Password"}
+        </button>
 
-      <p className="mt-4">{msg}</p>
+        {msg && (
+          <p className="mt-4 text-center text-green-400">
+            {msg}
+          </p>
+        )}
+      </div>
     </div>
   );
 }

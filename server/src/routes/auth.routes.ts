@@ -2,6 +2,8 @@ import express from "express";
 import prisma from "../config/prisma";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { sendResetEmail } from "../utils/sendEmail";
+
 const router = express.Router();
 
 /* =====================
@@ -41,6 +43,7 @@ router.post("/register", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
 /* =====================
    LOGIN
 ===================== */
@@ -94,6 +97,9 @@ router.post("/login", async (req, res) => {
   }
 });
 
+/* =====================
+   FORGOT PASSWORD (SEND EMAIL LINK)
+===================== */
 router.post("/forgot-password", async (req, res) => {
   try {
     const { email } = req.body;
@@ -120,10 +126,12 @@ router.post("/forgot-password", async (req, res) => {
       },
     });
 
+    // ✅ SEND EMAIL LINK
+    await sendResetEmail(email, resetToken);
+
     res.json({
       success: true,
-      message: "Reset token generated",
-      resetToken, 
+      message: "Reset link sent to email",
     });
 
   } catch (err: any) {
@@ -131,6 +139,9 @@ router.post("/forgot-password", async (req, res) => {
   }
 });
 
+/* =====================
+   RESET PASSWORD
+===================== */
 router.post("/reset-password", async (req, res) => {
   try {
     const { token, newPassword } = req.body;
@@ -144,9 +155,9 @@ router.post("/reset-password", async (req, res) => {
       where: { id: decoded.id },
     });
 
-   if (!user || user.resetToken !== token || !user.resetTokenExpiry) {
-  return res.status(400).json({ message: "Invalid token" });
-}
+    if (!user || user.resetToken !== token || !user.resetTokenExpiry) {
+      return res.status(400).json({ message: "Invalid token" });
+    }
 
     if (new Date() > user.resetTokenExpiry) {
       return res.status(400).json({ message: "Token expired" });
