@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import API from "@/src/lib/axios";
 
-export default function ResetPassword() {
+function ResetPasswordForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -33,7 +33,6 @@ export default function ResetPassword() {
       setTimeout(() => {
         router.push("/login");
       }, 2000);
-
     } catch (err: any) {
       setMsg(err.response?.data?.message || "Error resetting password.");
     } finally {
@@ -63,17 +62,37 @@ export default function ResetPassword() {
         <button
           onClick={handleReset}
           disabled={loading}
-          className="w-full mt-5 bg-cyan-500 hover:bg-cyan-600 p-3 rounded-lg font-semibold"
+          className="w-full mt-5 bg-cyan-500 hover:bg-cyan-600 p-3 rounded-lg font-semibold disabled:opacity-50"
         >
           {loading ? "Resetting..." : "Reset Password"}
         </button>
 
         {msg && (
-          <p className="mt-4 text-center text-green-400">
+          <p
+            className={`mt-4 text-center ${
+              msg.toLowerCase().includes("successful")
+                ? "text-green-400"
+                : "text-red-400"
+            }`}
+          >
             {msg}
           </p>
         )}
       </div>
     </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center min-h-screen bg-slate-900 text-white">
+          Loading...
+        </div>
+      }
+    >
+      <ResetPasswordForm />
+    </Suspense>
   );
 }
