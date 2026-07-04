@@ -1,51 +1,43 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
-const transporter = nodemailer.createTransport({
-  host: "smtp-relay.brevo.com",
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  connectionTimeout: 30000,
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendResetEmail = async (
   email: string,
   token: string
 ) => {
-  console.log("CLIENT_URL:", process.env.CLIENT_URL);
-  console.log("EMAIL_USER:", process.env.EMAIL_USER);
-  console.log("Sending email to:", email);
-
   const resetLink = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
 
+  console.log("Sending email to:", email);
   console.log("Reset Link:", resetLink);
 
-  try {
-    const info = await transporter.sendMail({
-      from: `"FinTrack AI" <nithyamorla18@gmail.com>`,
-      to: email,
-      subject: "Reset Your FinTrack AI Password",
-      html: `
-        <h2>Forgot your password?</h2>
+  const { data, error } = await resend.emails.send({
+    from: "FinTrack AI <onboarding@resend.dev>",
+    to: email,
+    subject: "Reset Your FinTrack AI Password",
+    html: `
+      <h2>Forgot your password?</h2>
+      <p>Click the button below to reset it.</p>
 
-        <p>Click below to reset it.</p>
+      <a href="${resetLink}"
+         style="
+           padding:12px 20px;
+           background:#06b6d4;
+           color:white;
+           text-decoration:none;
+           border-radius:8px;
+         ">
+         Reset Password
+      </a>
 
-        <a href="${resetLink}">
-          Reset Password
-        </a>
+      <p>This link expires in 15 minutes.</p>
+    `,
+  });
 
-        <p>This link expires in 15 minutes.</p>
-      `,
-    });
-
-    console.log("Email sent successfully!");
-    console.log(info);
-
-  } catch (err) {
-    console.error(" EMAIL ERROR:", err);
-    throw err;
+  if (error) {
+    console.error("RESEND ERROR:", error);
+    throw error;
   }
+
+  console.log("Email sent successfully:", data);
 };
