@@ -14,34 +14,37 @@ export const sendResetEmail = async (
   email: string,
   token: string
 ) => {
+  console.log("CLIENT_URL:", process.env.CLIENT_URL);
+  console.log("EMAIL_USER:", process.env.EMAIL_USER);
+  console.log("Sending email to:", email);
+
   const resetLink = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
 
-  console.log("Sending email to:", email);
   console.log("Reset Link:", resetLink);
 
-  const info = await transporter.sendMail({
-    from: `"FinTrack AI" <${process.env.EMAIL_USER}>`,
-    to: email,
-    subject: "Reset Your FinTrack AI Password",
-    html: `
-      <h2>Forgot your password?</h2>
-      <p>Click the button below to reset it.</p>
+  try {
+    const info = await transporter.sendMail({
+      from: `"FinTrack AI" <nithyamorla18@gmail.com>`,
+      to: email,
+      subject: "Reset Your FinTrack AI Password",
+      html: `
+        <h2>Forgot your password?</h2>
 
-      <a href="${resetLink}"
-         style="
-           padding:12px 20px;
-           background:#06b6d4;
-           color:white;
-           text-decoration:none;
-           border-radius:8px;
-         ">
-         Reset Password
-      </a>
+        <p>Click below to reset it.</p>
 
-      <p>This link expires in 15 minutes.</p>
-    `,
-  });
+        <a href="${resetLink}">
+          Reset Password
+        </a>
 
-  console.log("Email sent successfully!");
-  console.log(info);
+        <p>This link expires in 15 minutes.</p>
+      `,
+    });
+
+    console.log("Email sent successfully!");
+    console.log(info);
+
+  } catch (err) {
+    console.error(" EMAIL ERROR:", err);
+    throw err;
+  }
 };
