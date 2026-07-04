@@ -203,8 +203,6 @@ Create a `.env.local` file in the **client** directory:
 NEXT_PUBLIC_API_URL=http://localhost:5000
 ```
 
-> ⚠️ Never commit `.env` files. Use `.env.example` to document required variables.
-
 ---
 
 ## ▶️ Running Locally
