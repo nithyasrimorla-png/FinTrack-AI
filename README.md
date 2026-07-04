@@ -310,7 +310,4 @@ GitHub: [@nithyasrimorla-png](https://github.com/nithyasrimorla-png)
 
 ---
 
-## 📄 License
-
-This project is licensed under the [MIT License](LICENSE).
 
