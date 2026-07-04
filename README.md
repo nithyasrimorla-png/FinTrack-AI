@@ -42,12 +42,12 @@ Users can register and log in securely, upload CSV bank statements for automatic
 -  JWT reset token expiration for link security
 
 **Financial Management**
-- ➕ Add, edit, and delete transactions
-- 📁 CSV bank statement upload for bulk transaction import
-- 🏷️ Automatic transaction categorization
-- 📊 Dashboard analytics with income/expense summaries
-- 📈 Interactive charts and visualizations
-- 🤖 AI-generated financial insights based on spending patterns
+-  Add, edit, and delete transactions
+-  CSV bank statement upload for bulk transaction import
+-  Automatic transaction categorization
+-  Dashboard analytics with income/expense summaries
+-  Interactive charts and visualizations
+-  AI-generated financial insights based on spending patterns
 
 **Engineering**
 - 🌐 RESTful API architecture
