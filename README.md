@@ -33,7 +33,7 @@ Users can register and log in securely, upload CSV bank statements for automatic
 
 ---
 
-## ✨ Key Features
+##  Key Features
 
 **Authentication & Security**
 -  Secure user registration and JWT-based login
@@ -57,7 +57,7 @@ Users can register and log in securely, upload CSV bank statements for automatic
 
 ---
 
-## 🖼️ Screenshots
+##  Screenshots
 
 > Add screenshots or a demo GIF here to give recruiters an immediate visual of the product.
 
@@ -71,7 +71,7 @@ Users can register and log in securely, upload CSV bank statements for automatic
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -84,7 +84,7 @@ Users can register and log in securely, upload CSV bank statements for automatic
 
 ---
 
-## 🏗️ System Architecture
+##  System Architecture
 
 FinTrack AI follows a decoupled client-server architecture:
 
@@ -115,7 +115,7 @@ FinTrack AI follows a decoupled client-server architecture:
 
 ---
 
-## 🔐 Authentication Flow
+##  Authentication Flow
 
 1. **Registration:** User submits credentials → password is hashed with bcrypt → user record created in PostgreSQL.
 2. **Login:** Credentials verified against the hashed password → JWT issued and returned to the client.
@@ -127,7 +127,7 @@ This ensures passwords are never stored in plaintext and reset links cannot be r
 
 ---
 
-## 📂 Folder Structure
+##  Folder Structure
 
 ```
 FinTrack-AI/
@@ -156,7 +156,7 @@ FinTrack-AI/
 
 ---
 
-## ⚙️ Installation
+## Installation
 
 ### Prerequisites
 - Node.js (v18+)
@@ -184,7 +184,7 @@ npm install
 
 ---
 
-## 🔑 Environment Variables
+## Environment Variables
 
 Create a `.env` file in the **server** directory:
 
@@ -227,7 +227,7 @@ npm run dev
 
 ---
 
-## 🔌 API Overview
+## API Overview
 
 | Method | Endpoint | Description |
 |---|---|---|
@@ -246,7 +246,7 @@ npm run dev
 
 ---
 
-## 🚀 Deployment
+##  Deployment
 
 | Component | Platform | Notes |
 |---|---|---|
@@ -259,7 +259,7 @@ Environment variables are configured separately in each platform's dashboard to 
 
 ---
 
-## 🧩 Challenges Faced During Development
+##  Challenges Faced During Development
 
 - **Secure password reset flow:** Designing a reset mechanism that used short-lived JWTs to prevent replay attacks while keeping the user experience simple.
 - **CSV parsing reliability:** Handling inconsistent CSV formats from different banks while mapping fields to a consistent transaction schema.
@@ -268,7 +268,7 @@ Environment variables are configured separately in each platform's dashboard to 
 
 ---
 
-## 🔮 Future Enhancements
+##  Future Enhancements
 
 - 📊 Budget planning and goal-setting features
 - 🔔 Spending alerts and notifications
