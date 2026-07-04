@@ -50,10 +50,10 @@ Users can register and log in securely, upload CSV bank statements for automatic
 -  AI-generated financial insights based on spending patterns
 
 **Engineering**
-- 🌐 RESTful API architecture
-- 📱 Fully responsive UI
-- ⚙️ Environment-based configuration
-- 🚀 Production deployment (Vercel + Render)
+-  RESTful API architecture
+-  Fully responsive UI
+-  Environment-based configuration
+-  Production deployment (Vercel + Render)
 
 ---
 
