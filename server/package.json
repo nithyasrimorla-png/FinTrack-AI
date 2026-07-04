@@ -28,7 +28,6 @@
     "mongoose": "^9.7.3",
     "morgan": "^1.11.0",
     "multer": "^2.2.0",
-    "nodemailer": "^9.0.3",
     "pg": "^8.22.0",
     "prisma": "^7.8.0",
     "resend": "^6.17.1"

@@ -6,9 +6,7 @@ import { sendResetEmail } from "../utils/sendEmail";
 
 const router = express.Router();
 
-/* =====================
-   REGISTER
-===================== */
+
 router.post("/register", async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -44,9 +42,6 @@ router.post("/register", async (req, res) => {
   }
 });
 
-/* =====================
-   LOGIN
-===================== */
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -97,9 +92,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-/* =====================
-   FORGOT PASSWORD (SEND EMAIL LINK)
-===================== */
+
 router.post("/forgot-password", async (req, res) => {
   try {
     const { email } = req.body;
@@ -126,7 +119,7 @@ router.post("/forgot-password", async (req, res) => {
       },
     });
 
-    // ✅ SEND EMAIL LINK
+    
     await sendResetEmail(email, resetToken);
 
     res.json({
@@ -139,9 +132,7 @@ router.post("/forgot-password", async (req, res) => {
   }
 });
 
-/* =====================
-   RESET PASSWORD
-===================== */
+
 router.post("/reset-password", async (req, res) => {
   try {
     const { token, newPassword } = req.body;

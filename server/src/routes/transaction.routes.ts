@@ -11,9 +11,7 @@ const upload = multer({
   dest: "uploads/",
 });
 
-/* =============================
-   ADD TRANSACTION
-============================= */
+
 router.post("/", auth, async (req: AuthRequest, res) => {
   try {
     const { title, amount, type, category } = req.body;
@@ -51,9 +49,6 @@ router.post("/", auth, async (req: AuthRequest, res) => {
   }
 });
 
-/* =============================
-   GET USER TRANSACTIONS
-============================= */
 router.get("/", auth, async (req: AuthRequest, res) => {
   try {
     const data = await prisma.transaction.findMany({
@@ -78,9 +73,7 @@ router.get("/", auth, async (req: AuthRequest, res) => {
   }
 });
 
-/* =============================
-   DELETE TRANSACTION
-============================= */
+
 router.delete("/:id", auth, async (req: AuthRequest, res) => {
   try {
   await prisma.transaction.delete({
@@ -102,9 +95,7 @@ router.delete("/:id", auth, async (req: AuthRequest, res) => {
   }
 });
 
-/* =============================
-   CSV UPLOAD
-============================= */
+
 router.post(
   "/upload",
   auth,
