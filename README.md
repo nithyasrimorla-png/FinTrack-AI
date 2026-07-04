@@ -28,6 +28,7 @@ FinTrack AI is a full-stack personal finance management platform built to demons
 Users can register and log in securely, upload CSV bank statements for automatic transaction import, manage income/expenses, view interactive dashboards, and receive AI-generated summaries of their financial habits. The application is deployed with a decoupled architecture: a Next.js frontend on Vercel and an Express.js API on Render, backed by a PostgreSQL database (Neon).
 
 **🔗 Live Demo:** [fintrack-ai-teal.vercel.app](https://fintrack-ai-teal.vercel.app)
+
 **📦 Source Code:** [github.com/nithyasrimorla-png/FinTrack-AI](https://github.com/nithyasrimorla-png/FinTrack-AI)
 
 ---
