@@ -36,10 +36,10 @@ Users can register and log in securely, upload CSV bank statements for automatic
 ## ✨ Key Features
 
 **Authentication & Security**
-- 🔐 Secure user registration and JWT-based login
-- 🔑 Password hashing with bcrypt
-- ✉️ Forgot Password / Reset Password flow via secure, time-limited email links (Resend API)
-- ⏱️ JWT reset token expiration for link security
+-  Secure user registration and JWT-based login
+-  Password hashing with bcrypt
+-  Forgot Password / Reset Password flow via secure, time-limited email links (Resend API)
+-  JWT reset token expiration for link security
 
 **Financial Management**
 - ➕ Add, edit, and delete transactions
