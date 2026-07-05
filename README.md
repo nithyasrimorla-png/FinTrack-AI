@@ -272,8 +272,8 @@ Environment variables are configured separately in each platform's dashboard to 
 -  Spending alerts and notifications
 -  Multi-currency support
 -  Native mobile app (React Native)
-- 🧠 Expanded AI insights (forecasting, anomaly detection)
-- 🔒 OAuth login (Google/GitHub)
+-  Expanded AI insights (forecasting, anomaly detection)
+-  OAuth login (Google/GitHub)
 
 ---
 
