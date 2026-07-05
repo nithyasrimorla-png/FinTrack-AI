@@ -21,7 +21,7 @@ Track income and expenses, upload bank statements, visualize spending, and get A
 
 ---
 
-## 📖 Overview
+## Overview
 
 FinTrack AI is a full-stack personal finance management platform built to demonstrate production-grade, end-to-end engineering — from secure authentication to data visualization and AI-assisted insights.
 
@@ -277,7 +277,7 @@ Environment variables are configured separately in each platform's dashboard to 
 
 ---
 
-## 🎯 Skills Demonstrated
+##  Skills Demonstrated
 
 - Full-stack application design and implementation
 - RESTful API design with Express.js and TypeScript
@@ -291,7 +291,7 @@ Environment variables are configured separately in each platform's dashboard to 
 
 ---
 
-## 👀 What Recruiters Should Notice
+##  What Recruiters Should Notice
 
 - **End-to-end ownership:** Both frontend and backend are built and deployed independently, reflecting real-world production architecture.
 - **Security-first mindset:** Password hashing, JWT expiration, and secure reset flows are implemented rather than just described.
@@ -301,7 +301,7 @@ Environment variables are configured separately in each platform's dashboard to 
 
 ---
 
-## 👤 Author
+##  Author
 
 **Nithya Sri Morla**
 GitHub: [@nithyasrimorla-png](https://github.com/nithyasrimorla-png)
