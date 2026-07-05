@@ -268,7 +268,7 @@ Environment variables are configured separately in each platform's dashboard to 
 
 ##  Future Enhancements
 
-- 📊 Budget planning and goal-setting features
+-  Budget planning and goal-setting features
 - 🔔 Spending alerts and notifications
 - 🌍 Multi-currency support
 - 📱 Native mobile app (React Native)
