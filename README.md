@@ -291,7 +291,7 @@ Environment variables are configured separately in each platform's dashboard to 
 
 ---
 
-##  What Recruiters Should Notice
+##  Main Features
 
 - **End-to-end ownership:** Both frontend and backend are built and deployed independently, reflecting real-world production architecture.
 - **Security-first mindset:** Password hashing, JWT expiration, and secure reset flows are implemented rather than just described.
