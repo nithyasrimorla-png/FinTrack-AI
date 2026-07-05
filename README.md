@@ -304,6 +304,7 @@ Environment variables are configured separately in each platform's dashboard to 
 ##  Author
 
 **Nithya Sri Morla**
+
 GitHub: [@nithyasrimorla-png](https://github.com/nithyasrimorla-png)
 
 ---
