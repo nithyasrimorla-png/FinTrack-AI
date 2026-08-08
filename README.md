@@ -59,17 +59,22 @@ Users can register and log in securely, upload CSV bank statements for automatic
 
 ##  Screenshots
 
-> Add screenshots or a demo GIF here to give recruiters an immediate visual of the product.
+## Screenshots
 
-| Login | Dashboard |
-|---|---|
-| _`screenshots/login.png`_ | _`screenshots/dashboard.png`_ |
+<p align="center">
+  <img src="screenshots/login.png" width="45%">
+  <img src="screenshots/upload.png" width="45%">
+</p>
 
-| Transactions | Insights |
-|---|---|
-| _`screenshots/transactions.png`_ | _`screenshots/insights.png`_ |
+<p align="center">
+  <img src="screenshots/Transactions.png" width="45%">
+  <img src="screenshots/dashboard1.png" width="45%">
+</p>
 
----
+<p align="center">
+  <img src="screenshots/dashboard.png" width="60%">
+</p>
+
 
 ##  Tech Stack
 
